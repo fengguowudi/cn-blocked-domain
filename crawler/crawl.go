@@ -20,6 +20,8 @@ func genUA() (userAgent string) {
 	return
 }
 
+var client http.Client
+
 // Crawl crawls webpage content and returns *gzip.Reader
 func Crawl(target, referer string) (*http.Response, error) {
 	if _, err := url.Parse(target); err != nil {
@@ -35,13 +37,10 @@ func Crawl(target, referer string) (*http.Response, error) {
 	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
 	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9")
-
-	var client http.Client
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New("bad status code: " + strconv.Itoa(resp.StatusCode))
 	}
