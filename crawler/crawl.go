@@ -5,24 +5,24 @@ import (
 	"net/http"
 	"net/url"
 	"runtime"
-	"strconv"
 )
 
-func genUA() (userAgent string) {
+var client = http.Client{}
+
+func genUA() string {
 	switch runtime.GOOS {
 	case "linux":
-		userAgent = `Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0`
+		return `Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0`
 	case "darwin":
-		userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36`
+		return `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36`
 	case "windows":
-		userAgent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0`
+		return `Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0`
+	default:
+		return ""
 	}
-	return
 }
 
-var client http.Client
-
-// Crawl crawls webpage content and returns *gzip.Reader
+// Crawl crawls webpage content and returns *http.Response
 func Crawl(target, referer string) (*http.Response, error) {
 	if _, err := url.Parse(target); err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func Crawl(target, referer string) (*http.Response, error) {
 		return nil, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("bad status code: " + strconv.Itoa(resp.StatusCode))
+		return nil, errors.New("bad status code: " + resp.Status)
 	}
 
 	return resp, nil
