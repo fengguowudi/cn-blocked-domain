@@ -11,28 +11,24 @@ func buildTreeAndUnique(sortedDomainList []string) []string {
 	tree := newList()
 	remainList := make([]string, 0, len(sortedDomainList))
 
-	for _, d := range sortedDomainList {
-		parts := strings.Split(d, ".")
-		l, i, e := tree.Insert(parts)
+	for _, domain := range sortedDomainList {
+		parts := strings.Split(domain, ".")
+		leafIdx, isInserted, err := tree.Insert(parts)
 
-		if e != nil {
-			log.Println(utils.Fatal("[Error]"), "check domain", utils.Info(d), "for redundancy.")
+		if err != nil {
+			log.Println(utils.Fatal("[Error]"), "check domain", utils.Info(domain), "for redundancy.")
 			continue
 		}
-
-		if !i {
-			r := make([]string, 0, len(parts))
-
-			for x := 0; x <= l; x++ {
-				r = append(r, parts[x])
+		if !isInserted {
+			redundantParts := make([]string, 0, len(parts))
+			for i := 0; i <= leafIdx; i++ {
+				redundantParts = append(redundantParts, parts[i])
 			}
-
-			redundantStr := strings.Join(r, ".")
-			log.Println("Found redundant domain:", utils.Info(d), "@", utils.Warning(redundantStr))
+			redundantStr := strings.Join(redundantParts, ".")
+			log.Println("Found redundant domain:", utils.Info(domain), "@", utils.Warning(redundantStr))
 			continue
 		}
-
-		remainList = append(remainList, d)
+		remainList = append(remainList, domain)
 	}
 
 	return remainList
