@@ -24,9 +24,7 @@ jobs:
         
       - name: Run Warp
         run: |
-          sudo su
-          cd
-          bash <(curl -fsSL git.io/warp.sh) d
+          wget -N https://git.io/warp.sh && bash warp.sh d
 
       - name: Get project dependencies & run
         run: |
