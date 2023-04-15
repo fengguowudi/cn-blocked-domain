@@ -19,8 +19,8 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"gopkg.in/yaml.v2"
 
-	"github.com/Loyalsoldier/cn-blocked-domain/crawler"
-	"github.com/Loyalsoldier/cn-blocked-domain/utils"
+	"github.com/fengguowudi/cn-blocked-domain/crawler"
+	"github.com/fengguowudi/cn-blocked-domain/utils"
 )
 
 var (
