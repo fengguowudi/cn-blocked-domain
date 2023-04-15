@@ -21,10 +21,6 @@ jobs:
 
       - name: Checkout codebase
         uses: actions/checkout@v3.5.2
-        
-      - name: Run Warp
-        run: |
-          wget -N https://git.io/warp.sh && bash warp.sh d
 
       - name: Get project dependencies & run
         run: |
