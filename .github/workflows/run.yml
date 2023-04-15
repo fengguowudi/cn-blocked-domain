@@ -24,7 +24,7 @@ jobs:
         
       - name: Run Warp
         run: |
-          sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/P3TERX/warp.sh/main/warp.sh)"
+          sudo bash <(curl -fsSL git.io/warp.sh) d
 
       - name: Get project dependencies & run
         run: |
