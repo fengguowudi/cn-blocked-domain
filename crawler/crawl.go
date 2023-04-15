@@ -1,11 +1,10 @@
 package crawler
 
 import (
-	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"runtime"
-	"strconv"
 )
 
 func genUA() (userAgent string) {
@@ -20,30 +19,33 @@ func genUA() (userAgent string) {
 	return
 }
 
-// Crawl crawls webpage content and returns *gzip.Reader
 func Crawl(target, referer string) (*http.Response, error) {
-	if _, err := url.Parse(target); err != nil {
-		return nil, err
-	}
-	req, err := http.NewRequest(http.MethodGet, target, nil)
+	u, err := url.Parse(target)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Set("User-Agent", genUA())
-	req.Header.Set("Referer", referer)
-	req.Header.Set("Accept-Encoding", "gzip")
-	req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
-	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9")
+	req := &http.Request{
+		Method: http.MethodGet,
+		URL:    u,
+		Header: http.Header{
+			"User-Agent":      {genUA()},
+			"Referer":         {referer},
+			"Accept-Encoding": {"gzip"},
+			"Accept-Language": {"zh-CN,zh;q=0.9,en;q=0.8"},
+			"Accept":          {"text/html,application/xhtml+xml,application/xml;q=0.9"},
+		},
+	}
 
-	var client http.Client
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("bad status code: " + strconv.Itoa(resp.StatusCode))
+		resp.Body.Close()
+		return nil, fmt.Errorf("bad status code: %d", resp.StatusCode)
 	}
 
 	return resp, nil
