@@ -23,5 +23,3 @@ updates:
       time: "07:00"
     pull-request-branch-name:
       separator: "-"
-
-1
